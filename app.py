@@ -9,7 +9,7 @@ word_index = imdb.get_word_index()
 reverse_word_index = {value: key for key, value in word_index.items()}
 
 # Load the pre-trained RNN model
-model = load_model('rnn_model.h5')
+model = load_model('my_model.keras')
 
 # Helper Function: Decode the encoded review to human-readable text
 def decode_review(encoded_review):

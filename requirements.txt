@@ -1,6 +1,7 @@
 tensorflow==2.17.0
 keras==3.4.1
 pandas
+ipykernel
 numpy
 scikit-learn
 tensorboard
