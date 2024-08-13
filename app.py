@@ -33,8 +33,19 @@ def predict_sentiment(review):
     # Preprocess the input review
     preprocessed_input = preprocess_text(review)
     
+    # Ensure the input is a NumPy array
+    preprocessed_input = np.array(preprocessed_input)
+    
+    # Debugging: Print shape and type of preprocessed input
+    st.write(f"Preprocessed input shape: {preprocessed_input.shape}")
+    st.write(f"Preprocessed input type: {type(preprocessed_input)}")
+    
     # Predict the sentiment using the model
-    prediction = model.predict(preprocessed_input)
+    try:
+        prediction = model.predict(preprocessed_input)
+    except Exception as e:
+        st.error(f"Prediction failed: {e}")
+        return None, None
     
     # Determine sentiment based on the prediction confidence score
     confidence = prediction[0][0]
@@ -65,15 +76,11 @@ if st.button('Submit'):
         # Predict the sentiment
         sentiment, confidence = predict_sentiment(user_input)
         
-        # Display the results
-        st.subheader(f'Sentiment: {sentiment}')
-        st.write(f'Prediction Confidence: {confidence * 100:.2f}%')
+        if sentiment and confidence is not None:
+            # Display the results
+            st.subheader(f'Sentiment: {sentiment}')
+            st.write(f'Prediction Confidence: {confidence * 100:.2f}%')
     else:
         st.error('Please enter a valid movie review.')
 else:
     st.write('Please enter a movie review and click the Submit button.')
-
-## this is Sample Review decoded
-st.write("\n### Example of Decoded Review:")
-sample_encoded_review = [1, 14, 22, 16, 43, 530, 973, 1622, 1385, 65, 458, 4468, 66, 3948, 4412, 232, 33, 130, 12, 16, 34, 685, 41, 12, 216, 125, 24, 308, 5, 4, 2, 2, 33, 6, 58, 15, 4, 249, 2, 5, 4, 2, 7, 2, 2, 7, 11, 2, 5, 2, 11, 20, 2, 2, 22, 17, 2, 2, 11, 5, 4, 2, 2, 13, 2, 2, 2, 19, 2, 5, 20, 4, 5, 2, 2, 7, 2, 2, 15, 2, 2, 7, 2, 2, 2, 2, 11, 2, 14, 2, 2, 2, 5, 4, 5, 16, 2, 2, 2, 2, 15, 2, 7, 2, 5, 2, 11, 2, 22, 5, 2, 5, 2, 4, 2, 4, 2, 11, 2, 19, 2, 2, 8, 4, 15, 2, 23]
-st.write(decode_review(sample_encoded_review))
