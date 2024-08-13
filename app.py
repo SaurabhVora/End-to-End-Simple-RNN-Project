@@ -33,19 +33,11 @@ def predict_sentiment(review):
     # Preprocess the input review
     preprocessed_input = preprocess_text(review)
     
-    # Ensure the input is a NumPy array
-    preprocessed_input = np.array(preprocessed_input)
-    
-    # Debugging: Print shape and type of preprocessed input
-    st.write(f"Preprocessed input shape: {preprocessed_input.shape}")
-    st.write(f"Preprocessed input type: {type(preprocessed_input)}")
+    # Ensure the preprocessed input is a numpy array with the correct dtype
+    preprocessed_input = np.array(preprocessed_input, dtype='int32')
     
     # Predict the sentiment using the model
-    try:
-        prediction = model.predict(preprocessed_input)
-    except Exception as e:
-        st.error(f"Prediction failed: {e}")
-        return None, None
+    prediction = model.predict(preprocessed_input)
     
     # Determine sentiment based on the prediction confidence score
     confidence = prediction[0][0]
@@ -73,13 +65,15 @@ user_input = st.text_area('Movie Review', height=150, placeholder='Type your rev
 # Handle the submission of the review
 if st.button('Submit'):
     if user_input.strip():
-        # Predict the sentiment
-        sentiment, confidence = predict_sentiment(user_input)
-        
-        if sentiment and confidence is not None:
+        try:
+            # Predict the sentiment
+            sentiment, confidence = predict_sentiment(user_input)
+            
             # Display the results
             st.subheader(f'Sentiment: {sentiment}')
             st.write(f'Prediction Confidence: {confidence * 100:.2f}%')
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
     else:
         st.error('Please enter a valid movie review.')
 else:
