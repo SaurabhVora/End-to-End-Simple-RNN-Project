@@ -16,17 +16,25 @@ def decode_review(encoded_review):
     return ' '.join([reverse_word_index.get(i - 3, '?') for i in encoded_review])
 
 # Helper Function: Preprocess user input text
+# Helper Function: Preprocess user input text
 def preprocess_text(text):
     # Convert the text to lowercase and split into words
     words = text.lower().split()
     
     # Encode the words into integers using the word index
-    encoded_review = [word_index.get(word, 2) + 3 for word in words]
+    encoded_review = []
+    for word in words:
+        # Get the index of the word or assign 2 (index for unknown words)
+        index = word_index.get(word, 2) + 3
+        if index >= 10000:
+            index = 2  # Replace out-of-bounds index with index for unknown words
+        encoded_review.append(index)
     
     # Pad the sequence to ensure uniform length (500 in this case)
     padded_review = sequence.pad_sequences([encoded_review], maxlen=500)
     
     return padded_review
+
 
 # Function to Predict Sentiment with Multiple Categories
 def predict_sentiment(review):
